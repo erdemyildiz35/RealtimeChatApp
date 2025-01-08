@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realtime Chat App</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.ico">
+</head>
+<body>
+    <div class="chat-app">
+        <!-- Sol Menü (Kullanıcı Listesi) -->
+        <aside class="sidebar">
+            <header>
+                <h2>Chats</h2>
+                <button id="theme-toggle">🌙</button>
+            </header>
+            <ul id="user-list">
+                <li class="user active"># Genel Sohbet</li>
+                <li class="user"># Teknoloji</li>
+                <li class="user"># Eğlence</li>
+            </ul>
+        </aside>
+        
+        <!-- Ana Chat Alanı -->
+        <main class="chat-main">
+            <header class="chat-header">
+                <h3># Genel Sohbet</h3>
+            </header>
+            <div id="messages" class="messages"></div>
+            <form id="form">
+                <input id="input" type="text" placeholder="Type a message..." autocomplete="off" />
+                <button id="send-button">➤</button>
+            </form>
+        </main>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const form = document.getElementById('form');
+        const input = document.getElementById('input');
+        const messages = document.getElementById('messages');
+        const themeToggle = document.getElementById('theme-toggle');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (input.value) {
+                socket.emit('chat message', input.value);
+                input.value = '';
+            }
+        });
+
+        socket.on('chat message', (msg) => {
+            const item = document.createElement('div');
+            item.textContent = msg;
+            item.classList.add('message');
+            messages.appendChild(item);
+            messages.scrollTop = messages.scrollHeight;
+        });
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+        });
+    </script>
+</body>
+</html>
