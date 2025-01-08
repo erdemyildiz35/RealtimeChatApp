@@ -6,3 +6,4 @@ A real-time chat application built with **Node.js**, **TypeScript**, **Socket.IO
 
 ```bash
 npm install
+npm run dev
